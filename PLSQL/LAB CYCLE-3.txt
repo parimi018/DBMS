@@ -1,0 +1,215 @@
+1.	Write a PL/SQL block to do the following:
+	a.Read a number and print its multiplication table
+
+	PROGRAM:
+		DECLARE
+		N NUMBER:=&N;
+		BEGIN
+		FOR I IN 0..20 LOOP
+		DBMS_OUTPUT.PUT_LINE(N||'*'||I||'='||(N*I));
+		END LOOP;
+		END;
+	OUTPUT:
+		Enter value for n: 5
+		old   2: N NUMBER:=&N;
+		new   2: N NUMBER:=5;
+		5*0=0
+		5*1=5
+		5*2=10	
+		5*3=15
+		5*4=20
+		5*5=25
+		5*6=30
+		5*7=35
+		5*8=40
+		5*9=45
+		5*10=50
+		5*11=55
+		5*12=60
+		5*13=65
+		5*14=70
+		5*15=75
+		5*16=80
+		5*17=85
+		5*18=90
+		5*19=95
+		5*20=100
+
+		PL/SQL procedure successfully completed.
+
+
+
+	b.Read a number and check whether it is a palindrome or not
+	PROGRAM:
+		DECLARE
+			n number:=&n;
+			m number:=n;
+			s number:=0;
+			r number:=0;
+		BEGIN
+			WHILE n>0 LOOP
+				r:=MOD(n,10);
+				s:=s*10+r;
+				n:=TRUNC(n/10);
+			END LOOP;
+			IF m=s THEN
+				DBMS_OUTPUT.PUT_LINE(m||' is a Palindrome');
+			ELSE
+				DBMS_OUTPUT.PUT_LINE(m||' is not a Palindrome');
+			END IF;
+		END;
+
+	OUTPUT:
+		SQL> /
+		Enter value for n: 54345
+		old   2: n number:=&n;
+		new   2: n number:=54345;
+		54345 is a Palindrome
+
+		PL/SQL procedure successfully completed.
+
+
+
+
+	c.Read a number n, and print the first n Fibonacci numbers
+
+
+	PROGRAM:
+		declare
+			n number:=&n;
+			s number:=0;
+			a number:=0;
+			b number:=1;
+		begin
+			dbms_output.put_line('First '||n||' Fibonacci numbers in the sequence are:');
+			while n!=0 loop
+				dbms_output.put_line(s);
+				a:=b;
+				b:=s;
+				s:=a+b;
+				n:=n-1;
+			end loop;
+		end;
+
+	OUTPUT:
+		Enter value for n: 6
+		old   2:        n number:=&n;
+		new   2:        n number:=6;
+		First 6 Fibonacci numbers of the sequence are:
+		0
+		1
+		1
+		2
+		3
+		5
+
+		PL/SQL procedure successfully completed.
+
+
+
+
+
+2.Write a PL/SQL block which will accept two numbers and find out their LCM and HCF. The output should be stored in a table called DEMO_TAB.
+	PROGRAM:
+		-- CREATE TABLE DEMO_TAB(
+		--     NUM1    NUMBER,
+		--     NUM2    NUMBER,
+		--     LCM     NUMBER,
+		--     GCD     NUMBER
+		-- );
+		DECLARE
+			FIRST_NUMBER NUMBER := &FIRST_NUMBER;
+			A NUMBER := FIRST_NUMBER;
+			SECOND_NUMBER NUMBER := &SECOND_NUMBER;
+			B NUMBER := SECOND_NUMBER;
+			GCD NUMBER := 0;
+			LCM NUMBER := 0;
+		BEGIN
+			FOR I IN 1..B LOOP
+				IF TRUNC(MOD(A,I)) = 0 AND TRUNC(MOD(B,I)) = 0 THEN
+					GCD := I;
+				END IF;
+  			END LOOP;
+  			LCM := TRUNC((A * B) / GCD);
+  			INSERT INTO DEMO_TAB VALUES (A, B, LCM, GCD);
+  			COMMIT;
+		END;
+
+		--SELECT * FROM DEMO_TAB;
+
+
+
+
+	OUTPUT:
+		SQL> CREATE TABLE DEMO_TAB(
+  		2      NUM1    NUMBER,
+  		3      NUM2    NUMBER,
+		4      LCM     NUMBER,
+  		5      GCD     NUMBER
+  		6  );
+
+		Table created.
+
+		SQL> @G:\Shreyas\DBMS\2.sql
+		24  /
+		Enter value for first_number: 25
+		old   2:   FIRST_NUMBER NUMBER := &FIRST_NUMBER;
+		new   2:   FIRST_NUMBER NUMBER := 25;
+		Enter value for second_number: 125
+		old   4:   SECOND_NUMBER NUMBER := &SECOND_NUMBER;
+		new   4:   SECOND_NUMBER NUMBER := 125;
+
+		PL/SQL procedure successfully completed.
+
+		SQL> SELECT * FROM DEMO_TAB;
+
+	      NUM1       NUM2        LCM        GCD
+	---------- ---------- ---------- ----------
+        	25        125        125         25
+
+
+
+3.Consider the following relation schemas
+
+Inventory
+Product_ID	Product_name	Quantity
+
+   Purchase_Record
+Product_ID	Status	Date
+
+Write a PL/SQL block to read the quantity of a product from inventory and if it is > 0 reduce the quantity by 1 and record the status of purchase of that product as ‘PURCHASED’. Otherwise record the status of purchase of that product as ‘OUT OF STOCK’. While recording the status of a purchase, record the date of transaction.
+	PROGRAM:
+	
+	OUTPUT:
+
+
+
+4.Write a PL/SQL block to handle the following built-in exceptions
+	PROGRAM:
+	OUTPUT:
+
+5 .Write a PL/SQL block to check whether the quantity of any product in Inventory table of problem 3 is < 0. If so, using an exception display relevant message and update quantity to 0.
+	PROGRAM:
+	OUTPUT:
+6.	Consider the following relation schemas
+Emp
+Empid	name	salary	dno
+
+   Del_History
+Dno	Rows_deleted	date
+
+Write a PL/SQL block to delete records of all employees who belong to a particular department and then record the dno, no of rows deleted and date on which deletion occurred in the Del_History table. 
+	PROGRAM:
+	OUTPUT:
+7.	Consider the following relation schemas
+
+Bank_Main
+Acc_no	Name	Address	Acc-type	Curr_balance
+Bank_Trans
+Acc_no	Tr_type	Tr_date	Tr_amt	Upd_flag
+
+Where acc_type is S – savings C- current 
+Tr_type is D – deposit W – withdrawal 
+Write a PL/SQL block to update master table’s (i.e., Bank_Main) curr_balance field with transaction details from transaction file (i.e., Bank_Trans) and also change the status of the Upd_flag field of transaction table to ‘Y’ once the updation is complete.
+	PROGRAM:
+	OUTPUT:

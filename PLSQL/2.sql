@@ -1,16 +1,29 @@
-declare
-n number:=&n;
-m number:=n;
-s number:'';
-r number:=0;
-begin
-while n>0 loop
-r:=n%10;
-s:=s*10+r;
-n:=n/10
-end loop;
-if m==s then
-dbms_output.put_line(m||'is a Palindrome');
-else
-dbms_output.put_line(m||'is not a Palindrome');
-end;
+-- CREATE TABLE DEMO_TAB(
+--     NUM1    NUMBER,
+--     NUM2    NUMBER,
+--     LCM     NUMBER,
+--     GCD     NUMBER
+-- );
+DECLARE
+  FIRST_NUMBER NUMBER := &FIRST_NUMBER;
+  A NUMBER := FIRST_NUMBER;
+  SECOND_NUMBER NUMBER := &SECOND_NUMBER;
+  B NUMBER := SECOND_NUMBER;
+  GCD NUMBER := 0;
+  LCM NUMBER := 0;
+BEGIN
+  FOR I IN 1..B LOOP
+    IF TRUNC(MOD(A,I)) = 0 AND TRUNC(MOD(B,I)) = 0 THEN
+      GCD := I;
+    END IF;
+  END LOOP;
+  
+  LCM := TRUNC((A * B) / GCD);
+  
+  INSERT INTO DEMO_TAB VALUES (A, B, LCM, GCD);
+  COMMIT;
+END;
+
+--SELECT * FROM DEMO_TAB;
+
+
