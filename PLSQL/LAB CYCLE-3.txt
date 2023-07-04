@@ -178,13 +178,47 @@ Product_ID	Product_name	Quantity
 Product_ID	Status	Date
 
 Write a PL/SQL block to read the quantity of a product from inventory and if it is > 0 reduce the quantity by 1 and record the status of purchase of that product as ‘PURCHASED’. Otherwise record the status of purchase of that product as ‘OUT OF STOCK’. While recording the status of a purchase, record the date of transaction.
+
 	PROGRAM:
+		
+		declare
+			id inventory.product_id%type := &id;
+			q inventory.quantity%type;
+			s varchar(15);
+		begin
+			select quantity into q from inventory where product_id = id;
+				if q > 0 then
+					update inventory set quantity = quantity - 1 where product_id = id;
+					s:='Purchased';
+				else
+					s:='Out OF Stock';
+				end if;
+				insert into purchase_record values(id,s,sysdate);
+				dbms_output.put_line('Product Id '||id||' Purchase record Sucessfull.');
+		end;
 	
 	OUTPUT:
+		SQL> @Z:\y21cs164\DBMS\PLSQL\3.sql
+		Enter value for id: 4568
+		old   2:        id inventory.product_id%type := &id;
+		new   2:        id inventory.product_id%type := 4568;
+		Product Id 4568 Purchase record Sucessfull.
+	
+		PL/SQL procedure successfully completed.
 
-
+		SQL> select * from purchase_record;
+		
+		PRODUCT_ID STATUS               TRANSACDA
+		---------- -------------------- ---------
+	
+		      4568	Purchased            	04-JUL-23
+      
 
 4.Write a PL/SQL block to handle the following built-in exceptions
+	NO DATO FOUND .
+	TOO MANY ROWS.
+	ZERO DIVIDE.
+
 	PROGRAM:
 	OUTPUT:
 
