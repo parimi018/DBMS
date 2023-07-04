@@ -266,8 +266,38 @@ Write a PL/SQL block to read the quantity of a product from inventory and if it 
 5 .Write a PL/SQL block to check whether the quantity of any product in Inventory table of problem 3 is < 0. If so, using an exception display relevant message and update quantity to 0.
 	
 	PROGRAM:
+		DECLARE
+			ID INVENTORY.PRODUCT_ID%TYPE;
+			IQ EXCEPTION;
+		BEGIN
+			SELECT PRODUCT_ID INTO ID FROM INVENTORY WHERE QUANTITY<0;
+			IF SQL%FOUND THEN 
+				RAISE IQ;
+			END IF;
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					DBMS_OUTPUT.PUT_LINE('NO DATA FOUND WITH QUANTITY<0');
+				WHEN TOO_MANY_ROWS THEN
+					DBMS_OUTPUT.PUT_LINE('TOO MANY ROWS SELECTED');
+				WHEN IQ THEN
+					DBMS_OUTPUT.PUT_LINE('INVALID QUANTITY');
+					UPDATE INVENTORY SET QUANTITY=0 WHERE PRODUCT_ID=ID;
+		END;
 
 	OUTPUT:
+		SQL> SELECT * FROM INVENTORY;
+
+		PRODUCT_ID PRODUCT_NAME           QUANTITY
+		---------- -------------------- ----------
+      		4568 Soap                          5
+      		9865 Keyboard                      3
+      		2368 Monitor                       2
+
+		SQL> @G:\Shreyas\DBMS\5.sql
+ 		18  /
+		NO DATA FOUND WITH QUANTITY<0
+
+		PL/SQL procedure successfully completed.
 
 
 
