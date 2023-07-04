@@ -220,11 +220,58 @@ Write a PL/SQL block to read the quantity of a product from inventory and if it 
 	ZERO DIVIDE.
 
 	PROGRAM:
+		DECLARE
+			PN INVENTORY.PRODUCT_NAME%TYPE;
+			ID INVENTORY%ROWTYPE;
+			A NUMBER;
+		BEGIN
+			SELECT * INTO ID FROM INVENTORY;
+			A:=1/0;
+			SELECT PRODUCT_NAME INTO PN FROM INVENTORY WHERE PRODUCT_ID=1;
+			EXCEPTION
+				WHEN TOO_MANY_ROWS THEN
+					DBMS_OUTPUT.PUT_LINE('Too Many Rows Returned when only 1 required');
+				WHEN ZERO_DIVIDE THEN
+					DBMS_OUTPUT.PUT_LINE('Trying to divide by zero');
+				WHEN NO_DATA_FOUND THEN
+					DBMS_OUTPUT.PUT_LINE('ID 1 DOES NOT EXIST');
+		END;
+		
+		
+	
+	
 	OUTPUT:
+		SQL> @Z:\y21cs164\DBMS\PLSQL\4.SQL
+		Input truncated to 1 characters
+		 19  /
+		Trying to divide by zero
+		
+		PL/SQL procedure successfully completed.
+
+		SQL> @Z:\y21cs164\DBMS\PLSQL\4.SQL
+		Input truncated to 1 characters
+		 19  /
+		Too Many Rows Returned when only 1 required
+
+		PL/SQL procedure successfully completed.
+
+		SQL>  @Z:\y21cs164\DBMS\PLSQL\4.SQL
+		Input truncated to 1 characters
+		 20  /
+		ID 1 DOES NOT EXIST
+
+		PL/SQL procedure successfully completed.
+
 
 5 .Write a PL/SQL block to check whether the quantity of any product in Inventory table of problem 3 is < 0. If so, using an exception display relevant message and update quantity to 0.
+	
 	PROGRAM:
+
 	OUTPUT:
+
+
+
+
 6.	Consider the following relation schemas
 Emp
 Empid	name	salary	dno
