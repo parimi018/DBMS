@@ -1,0 +1,175 @@
+1.	Write a PL/SQL stored function to calculate ncr usingfact (m) function that returns factorial of m. 
+	PROGRAM:
+		//FACT.SQL
+		
+			CREATE OR REPLACE FUNCTION FACT(N NUMBER) RETURN NUMBER AS
+			BEGIN 
+				IF N=1 OR N=0 THEN
+					RETURN 1;
+				ELSE
+					RETURN N*FACT(N-1);
+				END IF;
+			END;
+
+		//NCR.SQL
+			CREATE OR REPLACE FUNCTION NCR(N NUMBER,R NUMBER) RETURN NUMBER AS
+			VAL NUMBER;
+			BEGIN
+				VAL:=TRUNC(FACT(N)/(FACT(R)*FACT(N-R)));
+				RETURN VAL;
+			END;
+
+		//NCR_MAIN.SQL
+			DECLARE
+				N NUMBER:=&N;
+				R NUMBER:=&R;
+				VALUE NUMBER;
+			BEGIN
+				VALUE: =NCR(N,R);
+				DBMS_OUTPUT.PUT_LINE(N||'C'||R||' = '||VALUE);
+			END;
+		
+		OUTPUT:
+			SQL> @Z:\y21cs164\DBMS\PLSQL\NCR_MAIN.SQL
+ 			 9  /
+			Enter value for n: 4
+			old   2:        N NUMBER:=&N;
+			new   2:        N NUMBER:=4;
+			Enter value for r: 2
+			old   3:        R NUMBER:=&R;
+			new   3:        R NUMBER:=2;
+			4C2 = 6
+
+PL/SQL procedure successfully completed.
+
+
+
+2.	Write a PL/SQL block that updates salary of an employee in employee table by using incr function which takes employee number as argument, calculates increment and returns increment based on the following criteria.
+	If salary <= 3000 – increment = 30% of salary
+	If salary > 3000 and <= 6000– increment = 20% of salary
+	Else increment = 10% of salary. 
+
+
+	PROGRAM:
+		//INCRE.SQL
+			CREATE OR REPLACE FUNCTION INCR(EN NUMBER) RETURN NUMBER AS
+			S EMP1.SAL%TYPE;
+			BEGIN
+				SELECT SAL INTO S  FROM EMP1 WHERE EMPNO=EN;
+				IF S<=3000 THEN
+					S:=S+(0.3*S);
+				ELSIF S>3000 AND S<=6000 THEN
+					S:=S+(0.2*S);
+				ELSE
+					S:=S+(0.1*S);
+				END IF;
+				RETURN S;
+			END;
+
+
+		//SAL_INCRE.SQL
+			DECLARE
+				EN NUMBER:=&EN;
+				VAL NUMBER;
+			BEGIN
+				VAL:=INCR(EN);
+				UPDATE EMP1 SET SAL=VAL WHERE EMPNO=EN;
+			END;	
+	
+
+		
+		
+	OUTPUT:
+		SQL> SELECT * FROM EMP1;
+
+		     EMPNO NAME                             SAL
+		---------- ------------------------- ----------
+		         1 ASTA                            2600
+		         2 YUNO                            4000
+		         3 LUCK                            9000
+
+		SQL> @Z:\y21cs164\DBMS\PLSQL\SAL_INCRE.SQL
+		Input truncated to 1 characters
+		  9  /
+		Enter value for en: 2
+		old   2:        EN NUMBER:=&EN;
+		new   2:        EN NUMBER:=2;
+
+		PL/SQL procedure successfully completed.
+
+		SQL> SELECT * FROM EMP1;
+		
+		     EMPNO NAME                             SAL
+		---------- ------------------------- ----------
+		         1 ASTA                            2600
+		         2 YUNO                            4800
+		         3 LUCK                            9000
+
+
+3.	Write a stored procedure, raise_salary which accepts an employee number. It uses incr function of previous program
+ 	to get the salary increase amount and uses employee number to select the current salary from employee table. If employee 
+	number is not found or if the current salary is null, it should raise an exception. Otherwise, updates the salary. 
+
+
+	PROGRAM:
+
+	//RAISE.SQL
+		CREATE OR REPLACE PROCEDURE RAISE_SALARY(EN NUMBER) AS
+		S NUMBER;
+		VAL NUMBER;
+		EXE EXCEPTION;
+	BEGIN
+		VAL:=INCR(EN);
+		SELECT SAL INTO S FROM EMP1 WHERE EMPNO=EN;
+		IF S IS NULL THEN 
+			RAISE EXE;
+		ELSE
+			UPDATE EMP1 SET SAL=VAL WHERE EMPNO=EN;
+		END IF;
+		EXCEPTION
+			WHEN NO_DATA_FOUND THEN
+				DBMS_OUTPUT.PUT_LINE('GIVEN EMPLOYEE NUMBER NOT FOUND');
+			WHEN EXE THEN
+				DBMS_OUTPUT.PUT_LINE('SALARY IS NULL');
+	END;
+		
+	//RAISE_MAIN.SQL
+		DECLARE
+			EN NUMBER:=&EN;
+		BEGIN
+			RAISE_SALARY(EN);
+		END;						
+
+	OUTPUT:
+		SQL> SELECT * FROM EMP1;
+
+     		EMPNO NAME                             SAL
+		---------- ------------------------- ----------
+		         1 ASTA                            2600
+		         2 YUNO                            5760
+		         3 LUCK                            9000
+
+		SQL> @Z:\y21cs164\DBMS\PLSQL\RAISE_MAIN.SQL
+		  6  /
+		Enter value for en: 6
+		old   2:        EN NUMBER:=&EN;
+		new   2:        EN NUMBER:=6;
+		GIVEN EMPLOYEE NUMBER NOT FOUND
+
+		PL/SQL procedure successfully completed.
+
+		SQL> @Z:\y21cs164\DBMS\PLSQL\RAISE_MAIN.SQL
+		  6  /
+		Enter value for en: 3
+		old   2:        EN NUMBER:=&EN;
+		new   2:        EN NUMBER:=3;
+
+		PL/SQL procedure successfully completed.
+
+		SQL> SELECT * FROM EMP1;
+
+		     EMPNO NAME                             SAL
+		---------- ------------------------- ----------
+		         1 ASTA                            2600
+		         2 YUNO                            5760
+		         3 LUCK                            9900
