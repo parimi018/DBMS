@@ -221,22 +221,22 @@ PL/SQL procedure successfully completed.
          		2          Wheat                             30
          		3          Flour                             25
 
-SQL> @Z:\y21cs164\DBMS\PLSQL\ITEM.SQL
-Input truncated to 1 characters
-  9  /
-Enter value for n: 2
-old   2:        N NUMBER:=&N;
-new   2:        N NUMBER:=2;
-Match Found
+			SQL> @Z:\y21cs164\DBMS\PLSQL\ITEM.SQL
+			Input truncated to 1 characters
+  			9  /
+			Enter value for n: 2
+			old   2:        N NUMBER:=&N;
+			new   2:        N NUMBER:=2;
+			Match Found
 
-PL/SQL procedure successfully completed.
+			PL/SQL procedure successfully completed.
 
-SQL> @Z:\y21cs164\DBMS\PLSQL\ITEM.SQL
-Input truncated to 1 characters
-  9  /
-Enter value for n: 6
-old   2:        N NUMBER:=&N;
-new   2:        N NUMBER:=6;
-Match Not Found
+			SQL> @Z:\y21cs164\DBMS\PLSQL\ITEM.SQL
+			Input truncated to 1 characters
+  			9  /
+			Enter value for n: 6
+			old   2:        N NUMBER:=&N;
+			new   2:        N NUMBER:=6;
+			Match Not Found
 
-PL/SQL procedure successfully completed.
+			PL/SQL procedure successfully completed.
