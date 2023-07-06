@@ -173,3 +173,70 @@ PL/SQL procedure successfully completed.
 		         1 ASTA                            2600
 		         2 YUNO                            5760
 		         3 LUCK                            9900
+
+4.	Consider the following table
+
+	ITEM
+	prod_id
+		name
+		mat_used
+		weight
+
+
+	Write a procedure which will check for the existence of prod_id from the table ITEM. This procedure must have two arguments, one 	of which will receive a value, which is a matching pattern for prod_id of the ITEM table, and another which will return a value 	indicating whether a match has been found or not
+
+	PROGRAM:
+	//EX_OF_P:
+		CREATE OR REPLACE PROCEDURE EX_OF_P(N IN NUMBER,S OUT CHAR) AS
+		ID ITEM.PROD_ID%TYPE;
+		BEGIN
+			SELECT PROD_ID INTO ID FROM ITEM WHERE PROD_ID=N;
+			S:='Match Found';
+			EXCEPTION
+				WHEN NO_DATA_FOUND THEN
+					S:='Match Not Found';
+		END;
+
+	//ITEM.SQL:
+		DECLARE
+			N NUMBER:=&N;
+			S VARCHAR(100);
+		BEGIN
+			EX_OF_P(N,S);
+			DBMS_OUTPUT.PUT_LINE(S);
+		END;
+	
+
+	OUTPUT:
+		SQL> @Z:\y21cs164\DBMS\PLSQL\EX_OF_P
+ 		10  /
+
+		Procedure created.
+
+		SQL> SELECT * FROM ITEM;
+
+   			PROD_ID    NAME                          WEIGHT
+			---------- ------------------------- ----------
+         		1          Rice                              50
+         		2          Wheat                             30
+         		3          Flour                             25
+
+SQL> @Z:\y21cs164\DBMS\PLSQL\ITEM.SQL
+Input truncated to 1 characters
+  9  /
+Enter value for n: 2
+old   2:        N NUMBER:=&N;
+new   2:        N NUMBER:=2;
+Match Found
+
+PL/SQL procedure successfully completed.
+
+SQL> @Z:\y21cs164\DBMS\PLSQL\ITEM.SQL
+Input truncated to 1 characters
+  9  /
+Enter value for n: 6
+old   2:        N NUMBER:=&N;
+new   2:        N NUMBER:=6;
+Match Not Found
+
+PL/SQL procedure successfully completed.
