@@ -252,5 +252,47 @@ PL/SQL procedure successfully completed.
 	PERSINFO is the table for which the auditing must be performed and AUDITPERSINFO is the table which keeps track of the records 		deleted or modified. Create a database trigger audit_trial. This trigger is forced when an UPDATE or a DELETE is performed on 		the table PERSINFO. It first checks for the operation being performed on the table. Then depending on the operation, a variable 	(that corresponds to operation) is assigned the value ‘UPDATE’ or ‘DELETE’ and then inserts the updated/deleted record into 		AUDITPERSINFO.
 
 	PROGRAM:
-	OUTPUT:
+	//AU_TR.SQL
+	CREATE OR REPLACE TRIGGER AUDIT_TRAIL 
+	AFTER UPDATE OR DELETE ON PERSINFO FOR EACH ROW
+	DECLARE
+		ENO NUMBER;
+		ENAME VARCHAR(25);
+		EAGE NUMBER;
+		OP VARCHAR(10);
+	BEGIN
+		IF UPDATING THEN
+			OP:='Updated';
+		ELSIF DELETING THEN
+			OP:='Deleted';
+		END IF;
+		ENO:=:OLD.EMPNO;
+		ENAME:=:OLD.NAME;
+		EAGE:=:OLD.AGE;
+		INSERT INTO AUDITPERSINFO VALUES(ENO,ENAME,EAGE,OP,SYSDATE);
+	END;
 
+	OUTPUT:
+		SQL> @Z:\y21cs164\DBMS\PLSQL\AU_TR.SQL
+ 		19  /
+		
+		Trigger created.
+
+		SQL> SELECT * FROM PERSINFO;
+
+     		EMPNO NAME                             AGE
+		---------- ------------------------- ----------
+         	1 Shreyas                           24
+         	2 Yuno                              27
+
+		SQL> UPDATE PERSINFO SET NAME='ASTA' WHERE EMPNO=1;
+
+		1 row updated.
+
+		SQL> SELECT * FROM AUDITPERSINFO;
+
+     		EMPNO NAME                             AGE OP         OPDATE
+		---------- ------------------------- ---------- ---------- ---------
+         		1 Shreyas                           24 Updated    07-JUL-23
+		
+		
